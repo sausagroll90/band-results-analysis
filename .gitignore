@@ -1,5 +1,6 @@
 .venv/
 bin/
+.idea/
 
 *.pyc
 *.xml
