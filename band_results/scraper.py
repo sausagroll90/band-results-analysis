@@ -2,6 +2,17 @@ from urllib.request import urlopen, Request
 from bs4 import BeautifulSoup
 
 
+def make_soup(url):
+    hdr = {"User-Agent": "Mozilla/5.0 (X11; U; Linux i686) Gecko/20071127 Firefox/2.0.0.11"}
+    request = Request(url, headers=hdr)
+    page = urlopen(request)
+    html_bytes = page.read()
+    html = html_bytes.decode("utf-8")
+    soup = BeautifulSoup(html, "html.parser")
+
+    return soup
+
+
 def get_data_from_row(row):
     row_data = {
         "position": row.contents[1].a.string,
@@ -13,14 +24,7 @@ def get_data_from_row(row):
 
 
 def get_results(url):
-    hdr = {"User-Agent": "Mozilla/5.0 (X11; U; Linux i686) Gecko/20071127 Firefox/2.0.0.11"}
-    request = Request(url, headers=hdr)
-
-    page = urlopen(request)
-    html_bytes = page.read()
-    html = html_bytes.decode("utf-8")
-
-    soup = BeautifulSoup(html, "html.parser")
+    soup = make_soup(url)
     results_table = soup.main.div.contents[7].contents[7].tbody
 
     # results table is empty at even indices
@@ -32,15 +36,7 @@ def get_results(url):
 
 def get_urls(number=None):
     url = "https://www.brassbandresults.co.uk/contests/national-finals-championship-section"
-
-    hdr = {"User-Agent": "Mozilla/5.0 (X11; U; Linux i686) Gecko/20071127 Firefox/2.0.0.11"}
-    request = Request(url, headers=hdr)
-
-    page = urlopen(request)
-    html_bytes = page.read()
-    html = html_bytes.decode("utf-8")
-
-    soup = BeautifulSoup(html, "html.parser")
+    soup = make_soup(url)
     contests_table = soup.main.tbody
     events = contests_table.find_all("a", attrs={"class": "bbr-event"})
     urls = ["https://www.brassbandresults.co.uk" + x.get("href") for x in events]
@@ -52,4 +48,4 @@ def get_urls(number=None):
 
 
 if __name__ == "__main__":
-    print(get_urls())
+    print(get_urls(5))
