@@ -3,14 +3,14 @@ import db
 
 
 def main():
-    url = "https://www.brassbandresults.co.uk/contests/national-finals-championship-section/2023-10-21"
-
-    results = scraper.get_results(url)
-
-    db.init_db()
-
-    for result in results:
-        db.add_result(result)
+    # urls = scraper.get_urls(10)
+    #
+    # for url in urls:
+    #     results = scraper.get_results(url)
+    #
+    #     for result in results:
+    #         print(result)
+    #         db.add_result(result)
 
     print(db.get_results())
 

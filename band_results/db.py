@@ -8,10 +8,11 @@ def init_db():
     cur.execute("DROP TABLE IF EXISTS result")
     cur.execute(
         """CREATE TABLE result (
-            position INTEGER PRIMARY KEY,
-            band TEXT UNIQUE NOT NULL,
+            result_id INTEGER PRIMARY KEY AUTOINCREMENT,
+            position INTEGER,
+            band TEXT NOT NULL,
             conductor TEXT,
-            draw INTEGER UNIQUE
+            draw INTEGER
         )"""
     )
 
@@ -32,8 +33,7 @@ def get_results():
     con = sqlite3.connect("bandresults.db")
     cur = con.cursor()
     results = cur.execute(
-        """SELECT * FROM result
-            WHERE position <= 3"""
+        """SELECT * FROM result"""
     ).fetchall()
     return results
 
