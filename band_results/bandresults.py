@@ -3,16 +3,16 @@ import db
 
 
 def main():
-    # urls = scraper.get_urls(10)
-    #
-    # for url in urls:
-    #     results = scraper.get_results(url)
-    #
-    #     for result in results:
-    #         print(result)
-    #         db.add_result(result)
+    bandresults_db = "bandresults.db"
+    urls = scraper.get_urls(3)
 
-    print(db.get_results())
+    for url in urls:
+        results = scraper.get_results(url)
+
+        for result in results:
+            db.add_result(result, bandresults_db)
+
+    print(db.get_results(bandresults_db))
 
 
 if __name__ == "__main__":

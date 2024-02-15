@@ -1,6 +1,4 @@
 import unittest
-from urllib.request import urlopen, Request
-from bs4 import BeautifulSoup
 from band_results import scraper
 
 
@@ -18,8 +16,12 @@ class ScraperTestCase(unittest.TestCase):
             "position": "1",
             "band": "Black Dyke",
             "conductor": "Nicholas Childs",
-            "draw": "17"
+            "draw": "17",
+            "region": "Yorkshire"
         })
+
+    def test_get_year(self):
+        self.assertEqual(scraper.get_year(self.url), "2023")
 
     def test_get_results(self):
         results = scraper.get_results(self.url)
@@ -28,19 +30,25 @@ class ScraperTestCase(unittest.TestCase):
                 "position": "1",
                 "band": "Black Dyke",
                 "conductor": "Nicholas Childs",
-                "draw": "17"
+                "draw": "17",
+                "region": "Yorkshire",
+                "year": "2023"
             },
             {
                 "position": "2",
                 "band": "Fodens",
                 "conductor": "Russell Gray",
-                "draw": "20"
+                "draw": "20",
+                "region": "North West",
+                "year": "2023"
             },
             {
                 "position": "3",
                 "band": "Cory",
                 "conductor": "Philip Harper",
-                "draw": "12"
+                "draw": "12",
+                "region": "Wales",
+                "year": "2023"
             }
         ])
 

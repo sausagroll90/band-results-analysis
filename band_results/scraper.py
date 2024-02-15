@@ -18,18 +18,27 @@ def get_data_from_row(row):
         "position": row.contents[1].a.string,
         "band": row.contents[3].a.string,
         "conductor": row.contents[5].a.string,
-        "draw": row.contents[7].a.string
+        "draw": row.contents[7].a.string,
+        "region": row.find("td", attrs={"class": "bbr-band"}).img["title"]
     }
     return row_data
+
+
+def get_year(url):
+    return url.split("/")[-1].split("-")[0]
 
 
 def get_results(url):
     soup = make_soup(url)
     results_table = soup.main.div.contents[7].contents[7].tbody
 
+    year = get_year(url)
     # results table is empty at even indices
     rows = [x for i, x in enumerate(results_table.children) if i % 2 == 1]
     results = list(map(get_data_from_row, rows))
+
+    for result in results:
+        result["year"] = year
 
     return results
 
