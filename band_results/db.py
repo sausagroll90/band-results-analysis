@@ -6,34 +6,50 @@ def init_db():
     cur = con.cursor()
 
     cur.execute("DROP TABLE IF EXISTS result")
+    cur.execute("DROP TABLE IF EXISTS band")
     cur.execute(
         """CREATE TABLE result (
             result_id INTEGER PRIMARY KEY AUTOINCREMENT,
             position INTEGER,
-            band TEXT NOT NULL,
+            band_id INTEGER NOT NULL,
             conductor TEXT,
-            draw INTEGER
-        )"""
-    )
+            draw INTEGER,
+            year INTEGER,
+            FOREIGN KEY (band_id)
+                REFERENCES band (band_id)
+        )""")
+    cur.execute("""       
+                    CREATE TABLE band (
+                        band_id INTEGER PRIMARY KEY AUTOINCREMENT,
+                        name TEXT NOT NULL UNIQUE,
+                        region TEXT
+                    )""")
 
 
-def add_result(result):
-    con = sqlite3.connect("bandresults.db")
+def add_result(result, db):
+    con = sqlite3.connect(db)
     cur = con.cursor()
 
     cur.execute(
-        "INSERT INTO result (position, band, conductor, draw) VALUES(?, ?, ?, ?)",
-        (result["position"], result["band"], result["conductor"], result["draw"])
+        "INSERT OR IGNORE INTO band (name, region) VALUES (?, ?)",
+        (result["band"], result["region"]))
+
+    (band_id,) = cur.execute("SELECT band_id FROM band WHERE name = ?",
+                             (result["band"],)).fetchone()
+
+    cur.execute(
+        "INSERT INTO result (position, band_id, conductor, draw, year) VALUES(?, ?, ?, ?, ?)",
+        (result["position"], band_id, result["conductor"], result["draw"], result["year"])
     )
 
     con.commit()
 
 
-def get_results():
-    con = sqlite3.connect("bandresults.db")
+def get_results(db):
+    con = sqlite3.connect(db)
     cur = con.cursor()
     results = cur.execute(
-        """SELECT * FROM result"""
+        """SELECT position, name, conductor, draw, year FROM result INNER JOIN band USING(band_id)"""
     ).fetchall()
     return results
 
