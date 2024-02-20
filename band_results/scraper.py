@@ -54,8 +54,7 @@ def get_results(url):
     return results
 
 
-def get_urls(number=None):
-    url = "https://www.brassbandresults.co.uk/contests/national-finals-championship-section"
+def get_urls(url, number=None):
     soup = make_soup(url)
     contests_table = soup.main.tbody
     events = contests_table.find_all("a", attrs={"class": "bbr-event"})

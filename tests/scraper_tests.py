@@ -2,6 +2,7 @@ import unittest
 from band_results import scraper
 from bs4 import BeautifulSoup
 
+
 class ScraperTestCase(unittest.TestCase):
     def setUp(self):
         self.url = "https://www.brassbandresults.co.uk/contests/national-finals-championship-section/2023-10-21"
@@ -34,6 +35,9 @@ class ScraperTestCase(unittest.TestCase):
     def test_get_year(self):
         self.assertEqual(scraper.get_year(self.url), "2023")
 
+    def test_get_contest(self):
+        self.assertEqual(scraper.get_contest(self.url), "National Championship of Great Britain (Championship Section Final)")
+
     def test_get_results(self):
         results = scraper.get_results(self.url)
         self.assertEqual(results[:3], [
@@ -65,6 +69,10 @@ class ScraperTestCase(unittest.TestCase):
 
 
 class GetUrlTestCase(unittest.TestCase):
+    def setUp(self):
+        self.url = "https://www.brassbandresults.co.uk/contests/national-finals-championship-section"
+        self.soup = scraper.make_soup(self.url)
+
     def test_get_5_urls(self):
         target = ['https://www.brassbandresults.co.uk/contests/national-finals-championship-section/2023-10-21',
                   'https://www.brassbandresults.co.uk/contests/national-finals-championship-section/2022-10-15',
@@ -72,14 +80,14 @@ class GetUrlTestCase(unittest.TestCase):
                   'https://www.brassbandresults.co.uk/contests/national-finals-championship-section/2020-10-10',
                   'https://www.brassbandresults.co.uk/contests/national-finals-championship-section/2019-10-12']
 
-        self.assertEqual(scraper.get_urls(5), target)
+        self.assertEqual(scraper.get_urls(self.url, 5), target)
 
     def test_get_all_urls(self):
         soup = scraper.make_soup("https://www.brassbandresults.co.uk/contests/national-finals-championship-section")
         contests_table = soup.main.tbody
         events = contests_table.find_all("a", attrs={"class": "bbr-event"})
 
-        self.assertEqual(len(events), len(scraper.get_urls()))
+        self.assertEqual(len(events), len(scraper.get_urls(self.url)))
 
 
 if __name__ == '__main__':
