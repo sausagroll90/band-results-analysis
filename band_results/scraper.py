@@ -14,18 +14,29 @@ def make_soup(url):
 
 
 def get_data_from_row(row):
-    row_data = {
-        "position": row.contents[1].a.string,
-        "band": row.contents[3].a.string,
-        "conductor": row.contents[5].a.string,
-        "draw": row.contents[7].a.string,
-        "region": row.find("td", attrs={"class": "bbr-band"}).img["title"]
-    }
+    row_data = dict()
+    items = ("position", "band", "conductor", "draw")
+
+    for item in items:
+        try:
+            row_data[item] = row.find("td", attrs={"class": f"bbr-{item}"}).a.string
+            if item == "band":
+                row_data["region"] = row.find("td", attrs={"class": "bbr-band"}).img["title"]
+        except AttributeError:
+            row_data[item] = ""
+            if item == "band":
+                row_data["region"] = ""
+
     return row_data
 
 
 def get_year(url):
     return url.split("/")[-1].split("-")[0]
+
+
+def get_contest(url):
+    soup = make_soup(url)
+    return soup.find("a", attrs={"class": "bbr-contest"}).string
 
 
 def get_results(url):

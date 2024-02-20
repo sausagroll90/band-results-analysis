@@ -1,6 +1,6 @@
 import unittest
 from band_results import scraper
-
+from bs4 import BeautifulSoup
 
 class ScraperTestCase(unittest.TestCase):
     def setUp(self):
@@ -18,6 +18,17 @@ class ScraperTestCase(unittest.TestCase):
             "conductor": "Nicholas Childs",
             "draw": "17",
             "region": "Yorkshire"
+        })
+
+    def test_get_data_from_row_empty(self):
+        newsoup = BeautifulSoup('<tr><td class="bbr-position"><span></span></td><td class="bbr-band"><span></span></td><td class="bbr-conductor"><span></span></td><td class "bbr-draw"><span></span></td></tr>', "html.parser")
+        data = scraper.get_data_from_row(newsoup)
+        self.assertEqual(data, {
+            "position": "",
+            "band": "",
+            "conductor": "",
+            "draw": "",
+            "region": ""
         })
 
     def test_get_year(self):
