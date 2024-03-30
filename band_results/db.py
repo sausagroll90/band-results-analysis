@@ -58,5 +58,15 @@ def main():
     init_db()
 
 
+def get_winners():
+    con = sqlite3.connect("bandresults.db")
+    con.row_factory = sqlite3.Row
+    cur = con.cursor()
+
+    results = cur.execute("SELECT name, conductor, year, draw FROM result JOIN band USING(band_id) WHERE position=1")
+    rows = results.fetchall()
+    return rows
+
+
 if __name__ == "__main__":
     main()
