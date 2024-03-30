@@ -1,11 +1,7 @@
 .venv/
 bin/
-.idea/
 
 *.pyc
-*.xml
-*.iml
 
 bandresults.db
-datafortableau.csv
 test.db
