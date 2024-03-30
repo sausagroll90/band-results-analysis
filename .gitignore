@@ -5,3 +5,6 @@ bin/
 
 bandresults.db
 test.db
+
+winners.txt
+winners.csv
