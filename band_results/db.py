@@ -54,18 +54,31 @@ def get_results(db):
     return results
 
 
-def main():
-    init_db()
-
-
-def get_winners():
+def make_cursor():
     con = sqlite3.connect("bandresults.db")
     con.row_factory = sqlite3.Row
     cur = con.cursor()
+    return cur
+
+
+def get_winners():
+    cur = make_cursor()
 
     results = cur.execute("SELECT name, conductor, year, draw FROM result JOIN band USING(band_id) WHERE position=1")
     rows = results.fetchall()
     return rows
+
+
+def get_wins_by_region():
+    cur = make_cursor()
+
+    results = cur.execute("SELECT region, count(*) FROM result JOIN band USING(band_id) WHERE position=1 GROUP BY region ORDER BY count(*) DESC")
+    rows = results.fetchall()
+    return rows
+
+
+def main():
+    init_db()
 
 
 if __name__ == "__main__":

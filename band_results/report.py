@@ -1,4 +1,4 @@
-from db import get_winners
+from db import get_winners, get_wins_by_region
 import csv
 
 def print_winners(rows):
@@ -27,11 +27,16 @@ def save_winners_to_csv_file(rows):
             writer.writerow(formatted_row)
 
 
+def print_wins_by_region(rows):
+    for row in rows:
+        print(f"region: {row['region']}")
+        print(f"wins: {row['count(*)']}")
+        print("")
+
+
 def main():
-    rows = get_winners()
-    print_winners(rows)
-    save_winners_to_txt_file(rows)
-    save_winners_to_csv_file(rows)
+    rows = get_wins_by_region()
+    print_wins_by_region(rows)
 
 
 if __name__ == "__main__":
