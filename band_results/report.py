@@ -1,7 +1,14 @@
 from db import get_winners, get_wins_by_region
 import csv
 
+def format_row_for_printing(row):
+    formatted_row = ""
+    for key in row.keys():
+        formatted_row += f"{key}: {row[key]}\n"
+    return formatted_row
+
 def print_winners(rows):
+    #TODO use format_row_for_printing(), can for loop be abstracted out?
     for row in rows:
         print(f"band: {row['name']}")
         print(f"conductor: {row['conductor']}")
@@ -35,8 +42,9 @@ def print_wins_by_region(rows):
 
 
 def main():
-    rows = get_wins_by_region()
-    print_wins_by_region(rows)
+    rows = get_winners()
+    first_row = rows[0]
+    print(format_row_for_printing(first_row))
 
 
 if __name__ == "__main__":
