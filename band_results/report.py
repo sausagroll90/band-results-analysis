@@ -1,20 +1,22 @@
 from db import get_winners, get_wins_by_region
 import csv
 
+
 def format_row_for_printing(row):
     formatted_row = ""
     for key in row.keys():
-        formatted_row += f"{key}: {row[key]}\n"
+        if key == "count(*)":
+            formatted_row += f"count: {row[key]}\n"
+        else:
+            formatted_row += f"{key}: {row[key]}\n"
+
     return formatted_row
 
-def print_winners(rows):
-    #TODO use format_row_for_printing(), can for loop be abstracted out?
+
+def print_rows(rows):
     for row in rows:
-        print(f"band: {row['name']}")
-        print(f"conductor: {row['conductor']}")
-        print(f"year: {row['year']}")
-        print(f"draw: {row['draw']}")
-        print("")
+        formatted_row = format_row_for_printing(row)
+        print(formatted_row)
     
     print(rows[0].keys())
 
@@ -34,17 +36,11 @@ def save_winners_to_csv_file(rows):
             writer.writerow(formatted_row)
 
 
-def print_wins_by_region(rows):
-    for row in rows:
-        print(f"region: {row['region']}")
-        print(f"wins: {row['count(*)']}")
-        print("")
-
-
 def main():
     rows = get_winners()
-    first_row = rows[0]
-    print(format_row_for_printing(first_row))
+    print_rows(rows)
+    rows2 = get_wins_by_region()
+    print_rows(rows2)
 
 
 if __name__ == "__main__":
