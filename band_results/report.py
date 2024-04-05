@@ -17,14 +17,24 @@ def print_rows(rows):
     for row in rows:
         formatted_row = format_row_for_printing(row)
         print(formatted_row)
-    
-    print(rows[0].keys())
 
 
-def save_winners_to_txt_file(rows):
+def format_row_for_txt(row):
+    formatted_row = ""
+    for key in row.keys():
+        if key == "count(*)":
+            formatted_row += f"count: {row[key]}, "
+        else:
+            formatted_row += f"{key}: {row[key]}, "
+    formatted_row += "\n"
+    #TODO make the end of each row not have a comma and a space
+    return formatted_row
+
+
+def save_rows_to_txt_file(rows):
     with open("winners.txt", "w", encoding="utf-8") as f:
         for row in rows:
-            formatted_row = f"band: {row['name']}, conductor: {row['conductor']}, year: {row['year']}, draw: {row['draw']}\n"
+            formatted_row = format_row_for_txt(row)
             f.write(formatted_row)
 
 
@@ -38,9 +48,7 @@ def save_winners_to_csv_file(rows):
 
 def main():
     rows = get_winners()
-    print_rows(rows)
-    rows2 = get_wins_by_region()
-    print_rows(rows2)
+    save_rows_to_txt_file(rows)
 
 
 if __name__ == "__main__":
