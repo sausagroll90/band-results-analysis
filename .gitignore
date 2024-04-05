@@ -3,8 +3,7 @@ bin/
 
 *.pyc
 
-bandresults.db
-test.db
+*.db
 
-winners.txt
-winners.csv
+*.txt
+*.csv
