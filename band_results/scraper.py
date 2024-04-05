@@ -3,7 +3,9 @@ from bs4 import BeautifulSoup
 
 
 def make_soup(url):
-    hdr = {"User-Agent": "Mozilla/5.0 (X11; U; Linux i686) Gecko/20071127 Firefox/2.0.0.11"}
+    hdr = {
+        "User-Agent": "Mozilla/5.0 (X11; U; Linux i686) Gecko/20071127 Firefox/2.0.0.11"
+    }
     request = Request(url, headers=hdr)
     page = urlopen(request)
     html_bytes = page.read()
@@ -21,7 +23,9 @@ def get_data_from_row(row):
         try:
             row_data[item] = row.find("td", attrs={"class": f"bbr-{item}"}).a.string
             if item == "band":
-                row_data["region"] = row.find("td", attrs={"class": "bbr-band"}).img["title"]
+                row_data["region"] = row.find("td", attrs={"class": "bbr-band"}).img[
+                    "title"
+                ]
         except AttributeError:
             row_data[item] = ""
             if item == "band":

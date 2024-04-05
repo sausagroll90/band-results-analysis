@@ -17,13 +17,16 @@ def init_db():
             year INTEGER,
             FOREIGN KEY (band_id)
                 REFERENCES band (band_id)
-        )""")
-    cur.execute("""       
+        )"""
+    )
+    cur.execute(
+        """       
                     CREATE TABLE band (
                         band_id INTEGER PRIMARY KEY AUTOINCREMENT,
                         name TEXT NOT NULL UNIQUE,
                         region TEXT
-                    )""")
+                    )"""
+    )
 
 
 def add_result(result, db):
@@ -32,14 +35,22 @@ def add_result(result, db):
 
     cur.execute(
         "INSERT OR IGNORE INTO band (name, region) VALUES (?, ?)",
-        (result["band"], result["region"]))
+        (result["band"], result["region"]),
+    )
 
-    (band_id,) = cur.execute("SELECT band_id FROM band WHERE name = ?",
-                             (result["band"],)).fetchone()
+    (band_id,) = cur.execute(
+        "SELECT band_id FROM band WHERE name = ?", (result["band"],)
+    ).fetchone()
 
     cur.execute(
         "INSERT INTO result (position, band_id, conductor, draw, year) VALUES(?, ?, ?, ?, ?)",
-        (result["position"], band_id, result["conductor"], result["draw"], result["year"])
+        (
+            result["position"],
+            band_id,
+            result["conductor"],
+            result["draw"],
+            result["year"],
+        ),
     )
 
     con.commit()
@@ -64,7 +75,9 @@ def make_cursor():
 def get_winners():
     cur = make_cursor()
 
-    results = cur.execute("SELECT name, conductor, year, draw FROM result JOIN band USING(band_id) WHERE position=1")
+    results = cur.execute(
+        "SELECT name, conductor, year, draw FROM result JOIN band USING(band_id) WHERE position=1"
+    )
     rows = results.fetchall()
     return rows
 
@@ -72,7 +85,9 @@ def get_winners():
 def get_wins_by_region():
     cur = make_cursor()
 
-    results = cur.execute("SELECT region, count(*) FROM result JOIN band USING(band_id) WHERE position=1 GROUP BY region ORDER BY count(*) DESC")
+    results = cur.execute(
+        "SELECT region, count(*) FROM result JOIN band USING(band_id) WHERE position=1 GROUP BY region ORDER BY count(*) DESC"
+    )
     rows = results.fetchall()
     return rows
 
