@@ -92,6 +92,16 @@ def get_wins_by_region():
     return rows
 
 
+def get_avg_draw_by_position():
+    cur = make_cursor()
+
+    results = cur.execute(
+        "SELECT position, AVG(draw) FROM result GROUP BY position ORDER BY position ASC"
+    )
+    rows = results.fetchall()
+    return rows
+
+
 def main():
     init_db()
 

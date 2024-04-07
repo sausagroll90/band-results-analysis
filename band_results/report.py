@@ -1,4 +1,4 @@
-from db import get_winners, get_wins_by_region
+from db import get_winners, get_wins_by_region, get_avg_draw_by_position
 import csv
 
 
@@ -78,12 +78,9 @@ def format_row_for_csv(row):
 
 
 def main():
-    winners = get_winners()
-    wins_by_region = get_wins_by_region()
-    save_rows_to_file("winners.txt", winners)
-    save_rows_to_file("wins_by_region.txt", wins_by_region)
-    save_rows_to_file("winners.csv", winners)
-    save_rows_to_file("wins_by_region.csv", wins_by_region)
+    rows = get_avg_draw_by_position()
+    save_rows_to_file("avg_draw.txt", rows)
+    save_rows_to_file("avg_draw.csv", rows)
 
 
 if __name__ == "__main__":
