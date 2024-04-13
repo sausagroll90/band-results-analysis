@@ -1,4 +1,4 @@
-from db import get_winners, get_wins_by_region, get_avg_draw_by_position
+from band_results.db import get_winners, get_wins_by_region, get_avg_draw_by_position
 import csv
 
 
