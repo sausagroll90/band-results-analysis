@@ -53,9 +53,9 @@ def save_rows_to_csv(file_path, rows):
     with open(file_path, "w", newline="") as csvfile:
         writer = csv.writer(csvfile)
 
-        header = rows[0].keys()
-        if "count(*)" in header:
-            header[header.index("count(*)")] = "count"
+        header = list(rows[0].keys())
+        if "COUNT(*)" in header:
+            header[header.index("COUNT(*)")] = "count"
         writer.writerow(header)
 
         for row in rows:
