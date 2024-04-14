@@ -2,6 +2,14 @@ from band_results.db import get_winners, get_wins_by_region, get_avg_draw_by_pos
 import csv
 
 
+def format_key_value(key, value):
+    if key == "COUNT(*)":
+        formatted_row = f"count: {value}"
+    else:
+        formatted_row = f"{key}: {value}"
+    return formatted_row
+
+
 def print_rows_to_console(rows):
     for row in rows:
         formatted_row = format_row_for_console(row)
@@ -11,16 +19,9 @@ def print_rows_to_console(rows):
 def format_row_for_console(row):
     formatted_row = ""
     for key in row.keys():
-        formatted_row += format_key_value_for_console(key, row[key])
+        formatted_row += format_key_value(key, row[key])
+        formatted_row += "\n"
     return formatted_row
-
-
-def format_key_value_for_console(key, value):
-    if key == "count(*)":
-        formatted_key_value = f"count: {value}\n"
-    else:
-        formatted_key_value = f"{key}: {value}\n"
-    return formatted_key_value
 
 
 def save_rows_to_file(file_path, rows):
@@ -42,46 +43,20 @@ def save_rows_to_txt(file_path, rows):
 def format_row_for_txt(row):
     formatted_row = ""
     for key in row.keys():
-        formatted_row += format_key_value_for_txt(key, row[key])
+        formatted_row += format_key_value(key, row[key])
+        formatted_row += ", "
     trimmed_formatted_row = formatted_row[0:-2] + "\n"
     return trimmed_formatted_row
-
-
-def format_key_value_for_txt(key, value):
-    if key == "count(*)":
-        formatted_row = f"count: {value}, "
-    else:
-        formatted_row = f"{key}: {value}, "
-    return formatted_row
 
 
 def save_rows_to_csv(file_path, rows):
     with open(file_path, "w", newline="") as csvfile:
         writer = csv.writer(csvfile)
-        header = make_csv_header(rows)
+
+        header = rows[0].keys()
+        if "count(*)" in header:
+            header[header.index("count(*)")] = "count"
         writer.writerow(header)
+
         for row in rows:
-            formatted_row = format_row_for_csv(row)
-            writer.writerow(formatted_row)
-
-
-def make_csv_header(rows):
-    header = rows[0].keys()
-    if "count(*)" in header:
-        header[header.index("count(*)")] = "count"
-    return header
-
-
-def format_row_for_csv(row):
-    formatted_row = [row[key] for key in row.keys()]
-    return formatted_row
-
-
-def main():
-    rows = get_avg_draw_by_position()
-    save_rows_to_file("avg_draw.txt", rows)
-    save_rows_to_file("avg_draw.csv", rows)
-
-
-if __name__ == "__main__":
-    main()
+            writer.writerow(row.values())
